@@ -5,10 +5,10 @@ import board
 import busio
 from adafruit_pca9685 import PCA9685
 
-# === PCA9685 設置 ===
-i2c = busio.I2C(board.SCL, board.SDA)  # Jetson Nano I2C 連接
+
+i2c = busio.I2C(board.SCL, board.SDA)  
 pca = PCA9685(i2c)
-pca.frequency = 50  # SG90 伺服馬達 PWM 頻率
+pca.frequency = 50  #PWM SG90
 
 # SG90的PWM
 SERVO_CHANNEL = 0  
@@ -16,12 +16,11 @@ MIN_PULSE = 150
 MAX_PULSE = 600    
 
 def set_servo_angle(angle):
-    """ 設定伺服馬達的角度，轉換為 PCA9685 的 12-bit duty cycle """
     pulse = int(MIN_PULSE + (angle / 180.0) * (MAX_PULSE - MIN_PULSE))
     duty_cycle_value = int((pulse / 20000) * 4095 * 65535)
     pca.channels[SERVO_CHANNEL].duty_cycle = duty_cycle_value
 
-# === OpenCV 攝影機設置 ===
+
 cap = cv2.VideoCapture(0)
 if not cap.isOpened():
     print("Error: 無法開啟攝影機")
@@ -45,7 +44,7 @@ while True:
     ret, frame = cap.read()
     if not ret:
         print("Error: 讀取影像失敗")
-        continue  # **如果讀取影像失敗，則繼續偵測**
+        continue  
 
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     
